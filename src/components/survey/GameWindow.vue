@@ -2,10 +2,10 @@
   <section>
     <div class="title">
       <h2>Welcome to the Dictionary Game!</h2>
-      {{ this.gameState }}
+      Gamestate: {{ this.gameState }} 
     </div>
     <base-card>
-      <div v-if="gameState == 'win'">You Win!</div>
+      <div v-if="gameState == 'win'">You Win! Your winning word was {{ this.winningWord }} </div>
       <div class="wordsBox" v-if="gameState == 'picking'">
         <word-component v-if="showWord1 && winner1.definitions.length > 0" :word="winner1" :gameState="this.gameState"
           @starter-clicked="starterClicked">
@@ -15,6 +15,7 @@
         </word-component>
       </div>
       <div class="wordsBox" v-if="gameState == 'on'">
+        <div>Total links: {{ this.totalLinks }}</div>
         <word-component :gameState="this.gameState" :word="winner1" v-if="showWord1 && winner1.definitions.length > 0"
           @definatom-clicked="fetchDefinition">
         </word-component>
@@ -34,6 +35,8 @@ export default {
   data() {
     return {
       gameState: "off",
+      winningWord:"",
+      totalLinks: 0,
       showWord1: true,
       showWord2: true,
       showDefinition1: false,
@@ -76,10 +79,14 @@ export default {
     },
     fetchDefinition(definatom, clickedNumber) {
       if (clickedNumber == 1 && definatom == this.winner2.w) {
+        this.winningWord = definatom
         this.gameState = "win"
+        return
       }
       if (clickedNumber == 2 && definatom == this.winner1.w) {
+        this.winningWord = definatom
         this.gameState = "win"
+        return
       }
       if (clickedNumber == 1) {
         this.showWord1 = false
@@ -120,6 +127,7 @@ export default {
             this.showWord2 = true
           }
           this.showDefinitions = true
+          this.totalLinks ++
 
         })
     },
