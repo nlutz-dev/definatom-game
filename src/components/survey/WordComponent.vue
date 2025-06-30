@@ -47,22 +47,15 @@ export default {
 </script>
 
 <style scoped>
-.word {
-  margin: 1rem auto;
-  top: 100px;
-  padding: 1rem;
-  border-radius: 12px;
-  margin: auto;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-}
+
 /* .word{
    position: fixed;
    top: 100px;
    margin: auto;
 } */
 .wordTitle {
-  margin: 1rem auto;
-  padding: 1rem;
+  padding: .5rem;
+  width: fit-content;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }

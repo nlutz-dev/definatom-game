@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="definition">
       <definatom 
         v-for="definatom in definatoms" 
         :key="definatom.id" 
@@ -37,10 +37,10 @@ export default {
 </script>
 
 <style scoped>
-div {
+.definition {
   margin: 1rem auto;
-  margin-left: 2rem;
-  word-wrap: break-word;
+  align-items: stretch;
+  max-width: 425px;
   padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);

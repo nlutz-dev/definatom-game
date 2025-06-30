@@ -35,8 +35,9 @@ export default {
 <style scoped>
 span {
   margin-right: 3px;
-  white-space: nowrap;
+  display: inline-block;
 }
+
 
 .clickable:hover {
   text-decoration: underline;
