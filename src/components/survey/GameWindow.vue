@@ -6,13 +6,16 @@
       <h2 class="subTitle">2. the smallest indivisble component of a definition.</h2>
       <h2 class="subTitle">3. a word I made up, and the name of this game.</h2>
       <h2 class="subTitle" style="text-decoration: underline" @click="forEmployers = !forEmployers">For Employers!</h2>
-      <h2 class="subTitle" v-if="forEmployers==true">Hello! This little app is made with Vue, making Api calls to WordsApi and hosted with Google Firebase.</h2>
-      <h2 class="subTitle" v-if="forEmployers==true">I plan to improve the win screen and make it all more stylish, so call this an MVP.</h2>
+      <h2 class="subTitle" v-if="forEmployers == true">Hello! This little app is made with Vue, making Api calls to
+        WordsApi and hosted with Google Firebase.</h2>
+      <h2 class="subTitle" v-if="forEmployers == true">I plan to improve the win screen and make it all more stylish, so
+        call this an MVP.</h2>
       <!-- <h2>The Game is: {{ this.gameState }}</h2>  -->
-      <div class="subTitle" v-if="gameState == 'win'">You Win! Your winning word was "{{ this.winningWord }}" Total links: {{
-        this.totalLinks }} </div>
+      <div class="subTitle" v-if="gameState == 'win'">You Win! Your winning word was "{{ this.winningWord }}" Total
+        links: {{
+          this.totalLinks }} </div>
     </div>
-    
+
     <div class="screen">
       <div class="wordsBox" v-if="gameState == 'on' || gameState == 'win'">
         <word-component :gameState="this.gameState" :word="winner1" v-if="showWord1 && winner1.definitions.length > 0"
@@ -30,7 +33,7 @@
         <div class="chainLink" v-for="word in this.wordChain" :key="word.id">{{ word }}</div>
       </div>
       <div class="instructionsBox" v-if="gameState == 'off'">
-        <div >
+        <div>
           When you begin the game, two random words will be grabbed from an online dictionary.<br><br>
           Your goal is to connect these two words by clicking on words in their definitions. <br><br>
           Each time you click on word in a definition, that word will become one of your two active words. <br><br>
@@ -47,6 +50,39 @@
 </template>
 
 <script>
+import { db } from '../../firebaseInit.js'
+import { collection, getDocs } from 'firebase/firestore';
+
+async function getAllDocumentsFromCollection() {
+  try {
+    const myCollectionRef = collection(db, "wordsDujoir"); // Replace "myCollection" with your actual collection name
+    const querySnapshot = await getDocs(myCollectionRef);
+    querySnapshot.forEach((doc) => {
+      console.log(`${doc.id} => `, doc.data());
+    });
+
+  } catch (error) {
+    console.error("Error getting documents: ", error);
+  }
+}
+
+// async function fetchData() {
+//   try {
+//     const docRef = doc(db, "wordsDujoir", "word1");
+
+//     const docSnap = await getDoc(docRef);
+
+//     if (docSnap.exists()) {
+//       console.log("Document data:", docSnap.data());
+//     } else {
+//       console.log("No such document!");
+//     }
+//   } catch (error) {
+//     console.error("Error fetching document:", error);
+//   }
+// }
+
+
 export default {
   data() {
     return {
@@ -59,7 +95,7 @@ export default {
       frontEnd: 0,
       backEnd: 1,
       forEmployers: false,
-      shortenedDefinatom:'',
+      shortenedDefinatom: '',
       showDefinition1: false,
       showDefinition2: false,
       starter: '',
@@ -90,7 +126,7 @@ export default {
     },
     reset() {
       Object.assign(this.$data, this.$options.data.apply(this))
-     this.startGame()
+      this.startGame()
     },
     fetchTest() {
       fetch("https://wordsapiv1.p.rapidapi.com/words/example",
@@ -105,7 +141,7 @@ export default {
       })
     },
     fetchDefinition(definatom, clickedNumber) {
-      if (this.gameState == 'win'){
+      if (this.gameState == 'win') {
         return
       }
       if (clickedNumber == 1 && definatom == this.winner2.w) {
@@ -147,38 +183,39 @@ export default {
               return
             }
             else
-            this.shortenedDefinatom = definatom.slice(0, -1);
+              this.shortenedDefinatom = definatom.slice(0, -1);
             this.isRetry = true
             console.log(definatom)
             this.fetchDefinition(this.shortenedDefinatom, clickedNumber)
           }
-          if (word != undefined && word.definitions.length > 0){
+          if (word != undefined && word.definitions.length > 0) {
             let newWord = { w: definatom, definitions: [] }
-          word.definitions.forEach((definition, index) => newWord.definitions[index] = definition.definition)
-          if (clickedNumber == 1) {
-            this.winner1.w = newWord.w
-            if (newWord.definitions.length > 3) newWord.definitions.length = 3
-            this.winner1.definitions = newWord.definitions
-            this.showWord1 = true
-            this.wordChain.splice(this.frontEnd + 1, 0, this.winner1.w)
-            this.frontEnd++
-            this.backEnd++
+            word.definitions.forEach((definition, index) => newWord.definitions[index] = definition.definition)
+            if (clickedNumber == 1) {
+              this.winner1.w = newWord.w
+              if (newWord.definitions.length > 3) newWord.definitions.length = 3
+              this.winner1.definitions = newWord.definitions
+              this.showWord1 = true
+              this.wordChain.splice(this.frontEnd + 1, 0, this.winner1.w)
+              this.frontEnd++
+              this.backEnd++
+            }
+            if (clickedNumber == 2) {
+              this.winner2.w = newWord.w
+              if (newWord.definitions.length > 3) newWord.definitions.length = 3
+              this.winner2.definitions = newWord.definitions
+              this.showWord2 = true
+              this.wordChain.splice(this.backEnd, 0, this.winner2.w)
+            }
+            this.showDefinitions = true
+            this.totalLinks++
           }
-          if (clickedNumber == 2) {
-            this.winner2.w = newWord.w
-            if (newWord.definitions.length > 3) newWord.definitions.length = 3
-            this.winner2.definitions = newWord.definitions
-            this.showWord2 = true
-            this.wordChain.splice(this.backEnd, 0, this.winner2.w)
-          }
-          this.showDefinitions = true
-          this.totalLinks++
-          }
-          
+
 
         })
     },
     fetchRandom1() {
+
       fetch('https://wordsapiv1.p.rapidapi.com/words/?letterPattern=^[a-zA-Z]*$&random=true',
         {
           method: 'GET',
@@ -237,7 +274,7 @@ export default {
     // }
   },
   mounted() {
-
+    getAllDocumentsFromCollection()
   }
 };
 </script>
@@ -261,7 +298,7 @@ export default {
   display: flex;
 }
 
-.instructionsBox{
+.instructionsBox {
   margin-left: auto;
   margin-right: auto;
 }
@@ -346,9 +383,8 @@ h2 {
   .screen {
     max-width: 100%;
     max-height: 100%;
-    flex-direction: column;
+    flex-direction: row;
     background: linear-gradient(#daa0e994, #b5a3d58d);
-    display: flex;
   }
 
   .wordsBox {

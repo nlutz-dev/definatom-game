@@ -15,6 +15,7 @@ A more specific approach may be to simply blacklist the words I'd rather not hav
 
 Future Plans?
 Professionalize the codebase a bit: add code comments and testing.
+Improved failsafes for words without definitions in api, eg, if "having" doesn't return a definition, search for "have" instead.
 Improve mobile UI.
 Add simple transitions as elements appear/leave.
 Add a Congratulations animation when you win.
