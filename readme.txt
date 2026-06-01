@@ -1,6 +1,9 @@
 Here's a fun little game I've made with Vue, it should be available currently at https://dictionary-game-379f6.web.app/
 
 Running Game Locally: "vue serve"
+Update Cloud Functions (functions/index.js): firebase deploy --only functions
+Update App (src): firebase deploy --only hosting:definatom
+Check index.js console logs: firebase functions:log 
 
 Game Guide
 When you begin you will query a dictionary api for two random words and be shown up to three of their definitions.
